@@ -9,6 +9,18 @@ const ChatFeed = (props) => {
     const { chats, activeChat, userName, messages } = props;
     const chat = chats && chats[activeChat]
 
+    const renderReadReceipts = ( message, isMyMessage) => {
+       return chat.people.map((person, index) => person.last_read === message.id && (
+            <div 
+            key={`read_${index}`}
+            className="read-receipt"
+            style={{ float:isMyMessage ? 'right' : 'left',
+                     backgroundImage:`url(${person?.person?.avatar})`  
+                  }}
+            />
+        ))
+    }
+
     const renderMessages = () => {
         //  Each message have a key. Place that key in variable keys
         const keys = Object.keys(messages)
@@ -29,7 +41,7 @@ const ChatFeed = (props) => {
                         }
                     </div>
                     <div className="read-receipts" style={{ marginRight: isMyMessage ? '18px':'0', marginLeft: isMyMessage ? '0' : '68px'}}>
-                        Read Receipt
+                      {renderReadReceipts( message, isMyMessage)}
                     </div>
                 </div>
             )
@@ -52,7 +64,7 @@ const ChatFeed = (props) => {
       {renderMessages()}
       <div style={{ height:'100px'}}/>
       <div className="message-form-container">
-          <MessageForm {...props} chatID={activeChat}/>
+          <MessageForm {...props} chatId={activeChat}/>
       </div>
         </div>
     )
